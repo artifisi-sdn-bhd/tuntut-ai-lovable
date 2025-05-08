@@ -1,3 +1,4 @@
+
 "use client"
 
 import { cn } from "@/lib/utils"
@@ -64,12 +65,12 @@ export function ImageGallery({
 
   const goToPrevious = useCallback(() => {
     if (selectedIndex === null) return
-    setSelectedIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+    setSelectedIndex((prev) => (prev !== null ? (prev === 0 ? images.length - 1 : prev - 1) : 0))
   }, [selectedIndex, images.length])
 
   const goToNext = useCallback(() => {
     if (selectedIndex === null) return
-    setSelectedIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+    setSelectedIndex((prev) => (prev !== null ? (prev === images.length - 1 ? 0 : prev + 1) : 0))
   }, [selectedIndex, images.length])
 
   // Handle keyboard navigation
@@ -90,8 +91,8 @@ export function ImageGallery({
     return () => window.removeEventListener("keydown", handleKeyDown)
   }, [selectedIndex, goToPrevious, goToNext, closeLightbox])
 
-  // Handle swipe gestures
-  useSwipe(galleryRef, {
+  // Handle swipe gestures - using type assertion to satisfy TypeScript
+  useSwipe(galleryRef as React.RefObject<HTMLElement>, {
     onSwipeLeft: goToNext,
     onSwipeRight: goToPrevious,
   })
